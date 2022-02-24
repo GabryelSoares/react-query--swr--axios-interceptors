@@ -1,39 +1,14 @@
-import { Children } from 'react'
-import { useQuery } from 'react-query';
+import { Route, Routes } from "react-router-dom";
+import { Repo } from "./pages/Repo";
+import { Repos } from "./pages/Repos";
 
-import axios from './services/axios';
 
-type Repository = {
-  full_name: string;
-  description: string;
+export const App = () => {
+  return(
+    <Routes>
+      <Route path="/repo/*" element={<Repo />} />
+      <Route path="/repos/" element={<Repos />} />
+    </Routes>
+  );
 }
 
-function App() {
-
-  const { data, isFetching} = useQuery('repos', async () => {
-    const response = await axios.get<Repository[]>('/users/GabryelSoares/repos');
-  
-    return response.data;
-  });
-
-  return (
-    <ul>
-      {(isFetching) ? (
-        <p>Carregando...</p>
-      ) : (
-        <>          
-          {Children.toArray(
-            data?.map((repo) => (
-              <li>
-                <strong>{repo.full_name}</strong>
-                <p>{repo.description}</p>
-              </li>
-            ))
-          )}
-        </>
-      )}
-    </ul>
-  )
-}
-
-export default App
